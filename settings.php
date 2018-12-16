@@ -1,15 +1,10 @@
 <?php 
- $servername="";
- $username = "";
-
+$servername="";
+$username = "";
 $password = "";
-
 $dbname = "";
-
 $conn = mysqli_connect($servername, $username, $password, $dbname);
-      mysqli_set_charset($conn, "utf8");
-	  
-	  
+      mysqli_set_charset($conn, "utf8");	    
 	  
 	  //Settings array
 	  $settings = array(

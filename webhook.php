@@ -46,6 +46,10 @@ $query= $conn->prepare('Select * FROM users WHERE user_id=?');
 			$query->fetch();
 			if($query->num_rows == 0){
 	$reply7=1;
+		if($input['message']['chat']['last_name']==NULL)
+	{
+		$input['message']['chat']['last_name']="Not set";
+	}
 			$query= $conn->prepare("INSERT INTO `users` (`id`, `nick`, `funds`, `profile_pc`, `profile_mobile`, `name`, `surname`, `language`, `user_id`, `rank`) VALUES ('', ?, 0, '', '', ?, ?, ?, ?, 1);");
            $query->bind_param("ssssi", $input['message']['chat']['username'], $input['message']['chat']['first_name'], $input['message']['chat']['last_name'], $input['message']['from']['language_code'], $sender);
             $query->execute();
