@@ -4,6 +4,7 @@ include ("settings.php");
 $token=$settings['token'];
 
 $input2 = file_get_contents('php://input');
+$mail=print_r($input2, true);
 $input = json_decode($input2, true);
 
 $sender=$input['message']['chat']['id'];
@@ -46,9 +47,9 @@ $query= $conn->prepare('Select * FROM users WHERE user_id=?');
 			$query->fetch();
 			if($query->num_rows == 0){
 	$reply7=1;
-		if($input['message']['chat']['last_name']==NULL)
+	if($input['message']['chat']['last_name']==NULL)
 	{
-		$input['message']['chat']['last_name']="Not set";
+		$input['message']['chat']['last_name']=$input['message']['chat']['first_name'];
 	}
 			$query= $conn->prepare("INSERT INTO `users` (`id`, `nick`, `funds`, `profile_pc`, `profile_mobile`, `name`, `surname`, `language`, `user_id`, `rank`) VALUES ('', ?, 0, '', '', ?, ?, ?, ?, 1);");
            $query->bind_param("ssssi", $input['message']['chat']['username'], $input['message']['chat']['first_name'], $input['message']['chat']['last_name'], $input['message']['from']['language_code'], $sender);
@@ -462,6 +463,10 @@ $funds=$funds+$wynik;
 if($rank==30 & $message!=="❌Cancel")
 {
 	$message=intval($message);
+	if($message<0)
+	{
+		$message=$message*(-1);
+	}
 	$query= $conn->prepare('Select funds FROM users WHERE user_id=?');
             $query->bind_param("i",$sender);
             $query->execute();
@@ -593,6 +598,10 @@ $funds=$funds+$value;
 if($rank==3 & $message!=="❌Cancel")
 {
 	$message=intval($message);
+	if($message<0)
+	{
+		$message=$message*(-1);
+	}
 if($message!=NULL )
 {
 	$seed=generateRandomString();
@@ -633,6 +642,10 @@ else
 if($rank==4 & $message!=="❌Cancel")
 {
 	$message=intval($message);
+	if($message<0)
+	{
+		$message=$message*(-1);
+	}
 	$query= $conn->prepare('Select funds FROM users WHERE user_id=?');
             $query->bind_param("i",$sender);
             $query->execute();
