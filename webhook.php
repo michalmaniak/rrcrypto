@@ -618,6 +618,7 @@ if($message=="❌Cancel")
 }';
 if($rank==33)
 {
+	sleep(4);
 		$query= $conn->prepare('Select value FROM FlipCoin WHERE sender_id=? AND SIDE IS NULL');
             $query->bind_param("i",$sender);
             $query->execute();
