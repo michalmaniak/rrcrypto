@@ -369,6 +369,63 @@ if($rank==33 & $message!=="❌Cancel")
 {
 	if($message=="Head" or $message=="Tail")
 	{
+		sleep(1);
+	$query= $conn->prepare("INSERT INTO `anti_log` (`id`, `message_id`, `date`, `sender_id`) VALUES ('', ?, ?, ?);");
+           $query->bind_param("iii", $input['update_id'], $input['message']['date'], $sender);
+            $query->execute();
+		//	$query->close();
+								$query= $conn->prepare('Select * FROM anti_log WHERE date=? and sender_id=?');
+			            $query->bind_param("ii", $input['message']['date'], $sender);
+            $query->execute();
+						$query->store_result();
+
+			$query->fetch();
+						if($query->num_rows>=2)
+						{
+							$test=1;
+						}
+sleep(1);
+								$query= $conn->prepare('Select * FROM anti_log WHERE date=? and sender_id=?');
+			            $query->bind_param("ii", $input['message']['date'], $sender);
+            $query->execute();
+						$query->store_result();
+
+			$query->fetch();
+						if($query->num_rows>=2)
+						{
+							$test=1;
+						}
+						if($test==1)
+						{
+				$jsonData='{
+  "text": "⚠️  Error: Pick right side",
+"chat_id": '.$sender.',
+"reply_markup":{
+	"resize_keyboard": true,
+	"keyboard":[["Head"],
+	["Tail"],
+	["❌Cancel"]],
+	"one_time_keyboard":true
+	}
+
+}';
+									$query= $conn->prepare('DELETE FROM anti_log WHERE date=? and sender_id=?');
+			            $query->bind_param("ii", $input['message']['date'], $sender);
+            $query->execute();
+	curl($jsonData, $url);
+		exit;
+			}
+
+					$query= $conn->prepare('Select value AS Bet FROM FlipCoin WHERE sender_id=? AND Side IS NULL');
+			            $query->bind_param("i", $sender);
+            $query->execute();
+			$query->store_result();
+			$query->bind_result($Bet);
+			$query->fetch();
+			if($query->num_rows==0)
+			{
+				exit;
+			}
 		$query= $conn->prepare('Select ServerSeed, PublicSeed FROM seed_story WHERE date=CURRENT_DATE');
             $query->execute();
 			$query->store_result();
@@ -380,12 +437,7 @@ if($rank==33 & $message!=="❌Cancel")
 			$query->store_result();
 			$query->bind_result($value);
 			$query->fetch();
-			$query= $conn->prepare('Select value AS Bet FROM FlipCoin WHERE sender_id=? AND Side IS NULL');
-			            $query->bind_param("i", $sender);
-            $query->execute();
-			$query->store_result();
-			$query->bind_result($Bet);
-			$query->fetch();
+
 			if($message==FlipCoin($ServerSeed, $PublicSeed, $value))
 			{ $wynik=$Bet*2;
 		$result="won".$value;
@@ -430,7 +482,9 @@ $funds=$funds+$wynik;
 
 }';
 			}
-			
+												$query= $conn->prepare('DELETE FROM anti_log WHERE date=? and sender_id=?');
+			            $query->bind_param("ii", $input['message']['date'], $sender);
+            $query->execute();
 						$query= $conn->prepare("UPDATE `FlipCoin` SET `Side`=?, `value` = ?, `result`=?, `Ch`=? WHERE `sender_id` = ? AND Side IS NULL;");
             $query->bind_param("sssss", $message, $Bet, $result, $wynik, $sender);
             $query->execute();
