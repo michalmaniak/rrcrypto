@@ -29,6 +29,12 @@ CREATE TABLE `await_deposit` (
 --
 -- Zrzut danych tabeli `await_deposit`
 --
+CREATE TABLE `anti_log` (
+  `id` int(11) NOT NULL,
+  `message_id` int(11) NOT NULL,
+  `date` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin2;
 
 -- --------------------------------------------------------
 
